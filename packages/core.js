@@ -14,5 +14,14 @@ import {
   Stage,
 } from '../src/core/turn-order.js';
 import { PlayerView } from '../src/core/player-view.js';
+import { InitializeGame } from '../src/core/initialize.js';
 
-export { ActivePlayers, Stage, TurnOrder, Pass, PlayerView, INVALID_MOVE };
+export {
+  InitializeGame,
+  ActivePlayers,
+  Stage,
+  TurnOrder,
+  Pass,
+  PlayerView,
+  INVALID_MOVE,
+};

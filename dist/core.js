@@ -1,19 +1,29 @@
-(function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('immer'), require('flatted')) :
-  typeof define === 'function' && define.amd ? define(['exports', 'immer', 'flatted'], factory) :
-  (global = global || self, factory(global.Core = {}, global.immer, global.Flatted));
-}(this, function (exports, produce, flatted) { 'use strict';
+(function(global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined'
+    ? factory(exports, require('immer'), require('flatted'))
+    : typeof define === 'function' && define.amd
+    ? define(['exports', 'immer', 'flatted'], factory)
+    : ((global = global || self),
+      factory((global.Core = {}), global.immer, global.Flatted));
+})(this, function(exports, produce, flatted) {
+  'use strict';
 
-  produce = produce && produce.hasOwnProperty('default') ? produce['default'] : produce;
+  produce =
+    produce && produce.hasOwnProperty('default') ? produce['default'] : produce;
 
   function _typeof(obj) {
-    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-      _typeof = function (obj) {
+    if (typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol') {
+      _typeof = function(obj) {
         return typeof obj;
       };
     } else {
-      _typeof = function (obj) {
-        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+      _typeof = function(obj) {
+        return obj &&
+          typeof Symbol === 'function' &&
+          obj.constructor === Symbol &&
+          obj !== Symbol.prototype
+          ? 'symbol'
+          : typeof obj;
       };
     }
 
@@ -22,7 +32,7 @@
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
+      throw new TypeError('Cannot call a class as a function');
     }
   }
 
@@ -31,7 +41,7 @@
       var descriptor = props[i];
       descriptor.enumerable = descriptor.enumerable || false;
       descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
+      if ('value' in descriptor) descriptor.writable = true;
       Object.defineProperty(target, descriptor.key, descriptor);
     }
   }
@@ -48,7 +58,7 @@
         value: value,
         enumerable: true,
         configurable: true,
-        writable: true
+        writable: true,
       });
     } else {
       obj[key] = value;
@@ -62,9 +72,10 @@
 
     if (Object.getOwnPropertySymbols) {
       var symbols = Object.getOwnPropertySymbols(object);
-      if (enumerableOnly) symbols = symbols.filter(function (sym) {
-        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-      });
+      if (enumerableOnly)
+        symbols = symbols.filter(function(sym) {
+          return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+        });
       keys.push.apply(keys, symbols);
     }
 
@@ -76,14 +87,21 @@
       var source = arguments[i] != null ? arguments[i] : {};
 
       if (i % 2) {
-        ownKeys(source, true).forEach(function (key) {
+        ownKeys(source, true).forEach(function(key) {
           _defineProperty(target, key, source[key]);
         });
       } else if (Object.getOwnPropertyDescriptors) {
-        Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+        Object.defineProperties(
+          target,
+          Object.getOwnPropertyDescriptors(source)
+        );
       } else {
-        ownKeys(source).forEach(function (key) {
-          Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+        ownKeys(source).forEach(function(key) {
+          Object.defineProperty(
+            target,
+            key,
+            Object.getOwnPropertyDescriptor(source, key)
+          );
         });
       }
     }
@@ -128,23 +146,30 @@
   }
 
   function _toConsumableArray(arr) {
-    return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
+    return (
+      _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread()
+    );
   }
 
   function _arrayWithoutHoles(arr) {
     if (Array.isArray(arr)) {
-      for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
+      for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++)
+        arr2[i] = arr[i];
 
       return arr2;
     }
   }
 
   function _iterableToArray(iter) {
-    if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
+    if (
+      Symbol.iterator in Object(iter) ||
+      Object.prototype.toString.call(iter) === '[object Arguments]'
+    )
+      return Array.from(iter);
   }
 
   function _nonIterableSpread() {
-    throw new TypeError("Invalid attempt to spread non-iterable instance");
+    throw new TypeError('Invalid attempt to spread non-iterable instance');
   }
 
   /*
@@ -154,7 +179,13 @@
    * license that can be found in the LICENSE file or at
    * https://opensource.org/licenses/MIT.
    */
+  var MAKE_MOVE = 'MAKE_MOVE';
   var GAME_EVENT = 'GAME_EVENT';
+  var REDO = 'REDO';
+  var RESET = 'RESET';
+  var SYNC = 'SYNC';
+  var UNDO = 'UNDO';
+  var UPDATE = 'UPDATE';
 
   /*
    * Copyright 2018 The boardgame.io Authors
@@ -171,7 +202,7 @@
   var PluginImmer = {
     fnWrap: function fnWrap(move) {
       return produce(move);
-    }
+    },
   };
 
   /**
@@ -187,13 +218,17 @@
    */
 
   var CtxPreMove = function CtxPreMove(ctx, plugins) {
-    [].concat(DEFAULT_PLUGINS, _toConsumableArray(plugins)).filter(function (plugin) {
-      return plugin.ctx !== undefined;
-    }).filter(function (plugin) {
-      return plugin.ctx.preMove !== undefined;
-    }).forEach(function (plugin) {
-      ctx = plugin.ctx.preMove(ctx, plugins);
-    });
+    []
+      .concat(DEFAULT_PLUGINS, _toConsumableArray(plugins))
+      .filter(function(plugin) {
+        return plugin.ctx !== undefined;
+      })
+      .filter(function(plugin) {
+        return plugin.ctx.preMove !== undefined;
+      })
+      .forEach(function(plugin) {
+        ctx = plugin.ctx.preMove(ctx, plugins);
+      });
     return ctx;
   };
   /**
@@ -203,15 +238,18 @@
    * @param {object} plugins - The list of plugins.
    */
 
-
   var GPreMove = function GPreMove(G, plugins) {
-    [].concat(DEFAULT_PLUGINS, _toConsumableArray(plugins)).filter(function (plugin) {
-      return plugin.G !== undefined;
-    }).filter(function (plugin) {
-      return plugin.G.preMove !== undefined;
-    }).forEach(function (plugin) {
-      G = plugin.G.preMove(G, plugins);
-    });
+    []
+      .concat(DEFAULT_PLUGINS, _toConsumableArray(plugins))
+      .filter(function(plugin) {
+        return plugin.G !== undefined;
+      })
+      .filter(function(plugin) {
+        return plugin.G.preMove !== undefined;
+      })
+      .forEach(function(plugin) {
+        G = plugin.G.preMove(G, plugins);
+      });
     return G;
   };
   /**
@@ -221,15 +259,18 @@
    * @param {object} plugins - The list of plugins.
    */
 
-
   var GPostMove = function GPostMove(G, plugins) {
-    [].concat(DEFAULT_PLUGINS, _toConsumableArray(plugins)).filter(function (plugin) {
-      return plugin.G !== undefined;
-    }).filter(function (plugin) {
-      return plugin.G.postMove !== undefined;
-    }).forEach(function (plugin) {
-      G = plugin.G.postMove(G, plugins);
-    });
+    []
+      .concat(DEFAULT_PLUGINS, _toConsumableArray(plugins))
+      .filter(function(plugin) {
+        return plugin.G !== undefined;
+      })
+      .filter(function(plugin) {
+        return plugin.G.postMove !== undefined;
+      })
+      .forEach(function(plugin) {
+        G = plugin.G.postMove(G, plugins);
+      });
     return G;
   };
   /**
@@ -239,21 +280,29 @@
    * @param {object} plugins - The list of plugins.
    */
 
-
   var FnWrap = function FnWrap(fn, plugins) {
     var reducer = function reducer(acc, _ref) {
       var fnWrap = _ref.fnWrap;
       return fnWrap(acc, plugins);
     };
 
-    var g = [].concat(DEFAULT_PLUGINS, _toConsumableArray(plugins)).filter(function (plugin) {
-      return plugin.fnWrap !== undefined;
-    }).reduce(reducer, fn);
-    return function (G, ctx) {
+    var g = []
+      .concat(DEFAULT_PLUGINS, _toConsumableArray(plugins))
+      .filter(function(plugin) {
+        return plugin.fnWrap !== undefined;
+      })
+      .reduce(reducer, fn);
+    return function(G, ctx) {
       G = GPreMove(G, plugins);
       ctx = CtxPreMove(ctx, plugins);
 
-      for (var _len = arguments.length, args = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+      for (
+        var _len = arguments.length,
+          args = new Array(_len > 2 ? _len - 2 : 0),
+          _key = 2;
+        _key < _len;
+        _key++
+      ) {
         args[_key - 2] = arguments[_key];
       }
 
@@ -271,13 +320,17 @@
      * @param {object} game - The game object.
      */
     setup: function setup(G, ctx, game) {
-      [].concat(DEFAULT_PLUGINS, _toConsumableArray(game.plugins)).filter(function (plugin) {
-        return plugin.G !== undefined;
-      }).filter(function (plugin) {
-        return plugin.G.setup !== undefined;
-      }).forEach(function (plugin) {
-        G = plugin.G.setup(G, ctx, game);
-      });
+      []
+        .concat(DEFAULT_PLUGINS, _toConsumableArray(game.plugins))
+        .filter(function(plugin) {
+          return plugin.G !== undefined;
+        })
+        .filter(function(plugin) {
+          return plugin.G.setup !== undefined;
+        })
+        .forEach(function(plugin) {
+          G = plugin.G.setup(G, ctx, game);
+        });
       return G;
     },
 
@@ -289,15 +342,19 @@
      * @param {object} plugins - The list of plugins.
      */
     onPhaseBegin: function onPhaseBegin(G, ctx, plugins) {
-      [].concat(DEFAULT_PLUGINS, _toConsumableArray(plugins)).filter(function (plugin) {
-        return plugin.G !== undefined;
-      }).filter(function (plugin) {
-        return plugin.G.onPhaseBegin !== undefined;
-      }).forEach(function (plugin) {
-        G = plugin.G.onPhaseBegin(G, ctx, plugins);
-      });
+      []
+        .concat(DEFAULT_PLUGINS, _toConsumableArray(plugins))
+        .filter(function(plugin) {
+          return plugin.G !== undefined;
+        })
+        .filter(function(plugin) {
+          return plugin.G.onPhaseBegin !== undefined;
+        })
+        .forEach(function(plugin) {
+          G = plugin.G.onPhaseBegin(G, ctx, plugins);
+        });
       return G;
-    }
+    },
   };
   var ctx = {
     /**
@@ -307,13 +364,17 @@
      * @param {object} game - The game object.
      */
     setup: function setup(ctx, game) {
-      [].concat(DEFAULT_PLUGINS, _toConsumableArray(game.plugins)).filter(function (plugin) {
-        return plugin.ctx !== undefined;
-      }).filter(function (plugin) {
-        return plugin.ctx.setup !== undefined;
-      }).forEach(function (plugin) {
-        ctx = plugin.ctx.setup(ctx, game);
-      });
+      []
+        .concat(DEFAULT_PLUGINS, _toConsumableArray(game.plugins))
+        .filter(function(plugin) {
+          return plugin.ctx !== undefined;
+        })
+        .filter(function(plugin) {
+          return plugin.ctx.setup !== undefined;
+        })
+        .forEach(function(plugin) {
+          ctx = plugin.ctx.setup(ctx, game);
+        });
       return ctx;
     },
 
@@ -324,15 +385,19 @@
      * @param {object} plugins - The list of plugins.
      */
     onPhaseBegin: function onPhaseBegin(ctx, plugins) {
-      [].concat(DEFAULT_PLUGINS, _toConsumableArray(plugins)).filter(function (plugin) {
-        return plugin.ctx !== undefined;
-      }).filter(function (plugin) {
-        return plugin.ctx.onPhaseBegin !== undefined;
-      }).forEach(function (plugin) {
-        ctx = plugin.ctx.onPhaseBegin(ctx, plugins);
-      });
+      []
+        .concat(DEFAULT_PLUGINS, _toConsumableArray(plugins))
+        .filter(function(plugin) {
+          return plugin.ctx !== undefined;
+        })
+        .filter(function(plugin) {
+          return plugin.ctx.onPhaseBegin !== undefined;
+        })
+        .forEach(function(plugin) {
+          ctx = plugin.ctx.onPhaseBegin(ctx, plugins);
+        });
       return ctx;
-    }
+    },
   };
 
   /*
@@ -342,8 +407,9 @@
    * license that can be found in the LICENSE file or at
    * https://opensource.org/licenses/MIT.
    */
-  var DEV = process.env.NODE_ENV === 'development' || process.env.NODE_ENV == 'test';
-  var errorfn = DEV ? console.error : function () {};
+  var DEV =
+    process.env.NODE_ENV === 'development' || process.env.NODE_ENV == 'test';
+  var errorfn = DEV ? console.error : function() {};
   function error(error) {
     errorfn('ERROR:', error);
   }
@@ -366,12 +432,12 @@
     var playerID = ctx.playerID;
     passOrder = [].concat(_toConsumableArray(passOrder), [playerID]);
     G = _objectSpread2({}, G, {
-      passOrder: passOrder
+      passOrder: passOrder,
     });
 
     if (passOrder.length >= ctx.numPlayers) {
       G = _objectSpread2({}, G, {
-        allPassed: true
+        allPassed: true,
       });
     }
 
@@ -383,7 +449,7 @@
 
   function SetActivePlayersEvent(state, playerID, arg) {
     return _objectSpread2({}, state, {
-      ctx: SetActivePlayers(state.ctx, playerID, arg)
+      ctx: SetActivePlayers(state.ctx, playerID, arg),
     });
   }
   function SetActivePlayers(ctx, playerID, arg) {
@@ -395,7 +461,7 @@
       _prevActivePlayers = _prevActivePlayers.concat({
         activePlayers: ctx.activePlayers,
         _activePlayersMoveLimit: ctx._activePlayersMoveLimit,
-        _activePlayersNumMoves: ctx._activePlayersNumMoves
+        _activePlayersNumMoves: ctx._activePlayersNumMoves,
       });
     } else {
       _prevActivePlayers = [];
@@ -406,20 +472,30 @@
 
     if (Array.isArray(arg)) {
       var value = {};
-      arg.forEach(function (v) {
-        return value[v] = Stage.NULL;
+      arg.forEach(function(v) {
+        return (value[v] = Stage.NULL);
       });
       activePlayers = value;
     }
 
     if (arg.value) {
       for (var id in arg.value) {
-        ApplyActivePlayerArgument(activePlayers, _activePlayersMoveLimit, id, arg.value[id]);
+        ApplyActivePlayerArgument(
+          activePlayers,
+          _activePlayersMoveLimit,
+          id,
+          arg.value[id]
+        );
       }
     }
 
     if (arg.player !== undefined) {
-      ApplyActivePlayerArgument(activePlayers, _activePlayersMoveLimit, playerID, arg.player);
+      ApplyActivePlayerArgument(
+        activePlayers,
+        _activePlayersMoveLimit,
+        playerID,
+        arg.player
+      );
     }
 
     if (arg.others !== undefined) {
@@ -427,7 +503,12 @@
         var _id = ctx.playOrder[i];
 
         if (_id !== playerID) {
-          ApplyActivePlayerArgument(activePlayers, _activePlayersMoveLimit, _id, arg.others);
+          ApplyActivePlayerArgument(
+            activePlayers,
+            _activePlayersMoveLimit,
+            _id,
+            arg.others
+          );
         }
       }
     }
@@ -435,7 +516,12 @@
     if (arg.all !== undefined) {
       for (var _i = 0; _i < ctx.playOrder.length; _i++) {
         var _id2 = ctx.playOrder[_i];
-        ApplyActivePlayerArgument(activePlayers, _activePlayersMoveLimit, _id2, arg.all);
+        ApplyActivePlayerArgument(
+          activePlayers,
+          _activePlayersMoveLimit,
+          _id2,
+          arg.all
+        );
       }
     }
 
@@ -466,7 +552,7 @@
       _activePlayersMoveLimit: _activePlayersMoveLimit,
       _activePlayersNumMoves: _activePlayersNumMoves,
       _prevActivePlayers: _prevActivePlayers,
-      _nextActivePlayers: _nextActivePlayers
+      _nextActivePlayers: _nextActivePlayers,
     });
   }
   /**
@@ -477,10 +563,10 @@
 
   function UpdateActivePlayersOnceEmpty(ctx) {
     var _ctx = ctx,
-        activePlayers = _ctx.activePlayers,
-        _activePlayersMoveLimit = _ctx._activePlayersMoveLimit,
-        _activePlayersNumMoves = _ctx._activePlayersNumMoves,
-        _prevActivePlayers = _ctx._prevActivePlayers;
+      activePlayers = _ctx.activePlayers,
+      _activePlayersMoveLimit = _ctx._activePlayersMoveLimit,
+      _activePlayersNumMoves = _ctx._activePlayersNumMoves,
+      _prevActivePlayers = _ctx._prevActivePlayers;
 
     if (activePlayers && Object.keys(activePlayers).length == 0) {
       if (ctx._nextActivePlayers) {
@@ -507,7 +593,7 @@
       activePlayers: activePlayers,
       _activePlayersMoveLimit: _activePlayersMoveLimit,
       _activePlayersNumMoves: _activePlayersNumMoves,
-      _prevActivePlayers: _prevActivePlayers
+      _prevActivePlayers: _prevActivePlayers,
     });
   }
   /**
@@ -518,10 +604,15 @@
    * @param {(String|Object)} arg An active player argument
    */
 
-  function ApplyActivePlayerArgument(activePlayers, _activePlayersMoveLimit, playerID, arg) {
+  function ApplyActivePlayerArgument(
+    activePlayers,
+    _activePlayersMoveLimit,
+    playerID,
+    arg
+  ) {
     if (_typeof(arg) !== 'object' || arg === Stage.NULL) {
       arg = {
-        stage: arg
+        stage: arg,
       };
     }
 
@@ -535,7 +626,6 @@
    * @param {Array} playOrder - An array of player ID's.
    * @param {number} playOrderPos - An index into the above.
    */
-
 
   function getCurrentPlayer(playOrder, playOrderPos) {
     return playOrder[playOrderPos] + '';
@@ -553,11 +643,13 @@
    * @param {object} turn - A turn object for this phase.
    */
 
-
   function InitTurnOrderState(G, ctx, turn) {
     var order = turn.order;
 
-    var playOrder = _toConsumableArray(new Array(ctx.numPlayers)).map(function (d, i) {
+    var playOrder = _toConsumableArray(new Array(ctx.numPlayers)).map(function(
+      d,
+      i
+    ) {
       return i + '';
     });
 
@@ -570,7 +662,7 @@
     ctx = _objectSpread2({}, ctx, {
       currentPlayer: currentPlayer,
       playOrderPos: playOrderPos,
-      playOrder: playOrder
+      playOrder: playOrder,
     });
     ctx = SetActivePlayers(ctx, currentPlayer, turn.activePlayers || {});
     return ctx;
@@ -595,7 +687,7 @@
         playOrderPos = ctx.playOrder.indexOf(endTurnArg.next);
         currentPlayer = endTurnArg.next;
       } else {
-        error("invalid argument to endTurn: ".concat(endTurnArg));
+        error('invalid argument to endTurn: '.concat(endTurnArg));
       }
     } else {
       var t = order.next(G, ctx);
@@ -610,11 +702,11 @@
 
     ctx = _objectSpread2({}, ctx, {
       playOrderPos: playOrderPos,
-      currentPlayer: currentPlayer
+      currentPlayer: currentPlayer,
     });
     return {
       endPhase: endPhase,
-      ctx: ctx
+      ctx: ctx,
     };
   }
   /**
@@ -641,7 +733,7 @@
       },
       next: function next(G, ctx) {
         return (ctx.playOrderPos + 1) % ctx.playOrder.length;
-      }
+      },
     },
 
     /**
@@ -655,7 +747,7 @@
       },
       next: function next(G, ctx) {
         return (ctx.playOrderPos + 1) % ctx.playOrder.length;
-      }
+      },
     },
 
     /**
@@ -672,7 +764,7 @@
         if (ctx.playOrderPos < ctx.playOrder.length - 1) {
           return ctx.playOrderPos + 1;
         }
-      }
+      },
     },
 
     /**
@@ -693,7 +785,7 @@
         },
         next: function next(G, ctx) {
           return (ctx.playOrderPos + 1) % ctx.playOrder.length;
-        }
+        },
       };
     },
 
@@ -716,7 +808,7 @@
         },
         next: function next(G, ctx) {
           return (ctx.playOrderPos + 1) % ctx.playOrder.length;
-        }
+        },
       };
     },
 
@@ -741,11 +833,11 @@
             return playOrderPos;
           }
         }
-      }
-    }
+      },
+    },
   };
   var Stage = {
-    NULL: null
+    NULL: null,
   };
   var ActivePlayers = {
     /**
@@ -755,7 +847,7 @@
      * until the phase ends.
      */
     ALL: {
-      all: Stage.NULL
+      all: Stage.NULL,
     },
 
     /**
@@ -767,7 +859,7 @@
      */
     ALL_ONCE: {
       all: Stage.NULL,
-      moveLimit: 1
+      moveLimit: 1,
     },
 
     /**
@@ -777,7 +869,7 @@
      * until the phase ends.
      */
     OTHERS: {
-      others: Stage.NULL
+      others: Stage.NULL,
     },
 
     /**
@@ -789,8 +881,8 @@
      */
     OTHERS_ONCE: {
       others: Stage.NULL,
-      moveLimit: 1
-    }
+      moveLimit: 1,
+    },
   };
 
   /*
@@ -816,8 +908,8 @@
         type: type,
         args: args,
         playerID: playerID,
-        credentials: credentials
-      }
+        credentials: credentials,
+      },
     };
   };
   /**
@@ -828,16 +920,21 @@
    * @param {string}  credentials - (optional) The credentials for the player making this action.
    */
 
-  var automaticGameEvent = function automaticGameEvent(type, args, playerID, credentials) {
+  var automaticGameEvent = function automaticGameEvent(
+    type,
+    args,
+    playerID,
+    credentials
+  ) {
     return {
       type: GAME_EVENT,
       payload: {
         type: type,
         args: args,
         playerID: playerID,
-        credentials: credentials
+        credentials: credentials,
       },
-      automatic: true
+      automatic: true,
     };
   };
 
@@ -869,16 +966,15 @@
    */
   function Alea(seed) {
     var me = this,
-        mash = Mash();
+      mash = Mash();
 
-    me.next = function () {
+    me.next = function() {
       var t = 2091639 * me.s0 + me.c * 2.3283064365386963e-10; // 2^-32
 
       me.s0 = me.s1;
       me.s1 = me.s2;
-      return me.s2 = t - (me.c = t | 0);
+      return (me.s2 = t - (me.c = t | 0));
     }; // Apply the seeding algorithm from Baagoe.
-
 
     me.c = 1;
     me.s0 = mash(' ');
@@ -938,14 +1034,14 @@
 
   function alea(seed, opts) {
     var xg = new Alea(seed),
-        state = opts && opts.state,
-        prng = xg.next;
+      state = opts && opts.state,
+      prng = xg.next;
     prng.quick = prng;
 
     if (state) {
       if (_typeof(state) == 'object') copy(state, xg);
 
-      prng.state = function () {
+      prng.state = function() {
         return copy(xg, {});
       };
     }
@@ -962,169 +1058,175 @@
    */
 
   var Random =
-  /*#__PURE__*/
-  function () {
-    /**
-     * constructor
-     * @param {object} ctx - The ctx object to initialize from.
-     */
-    function Random(ctx) {
-      _classCallCheck(this, Random);
-
-      // If we are on the client, the seed is not present.
-      // Just use a temporary seed to execute the move without
-      // crashing it. The move state itself is discarded,
-      // so the actual value doesn't matter.
-      this.state = ctx._random || {
-        seed: '0'
-      };
-    }
-    /**
-     * Updates ctx with the PRNG state.
-     * @param {object} ctx - The ctx object to update.
-     */
-
-
-    _createClass(Random, [{
-      key: "update",
-      value: function update(state) {
-        var ctx = _objectSpread2({}, state.ctx, {
-          _random: this.state
-        });
-
-        return _objectSpread2({}, state, {
-          ctx: ctx
-        });
-      }
+    /*#__PURE__*/
+    (function() {
       /**
-       * Attaches the Random API to ctx.
-       * @param {object} ctx - The ctx object to attach to.
+       * constructor
+       * @param {object} ctx - The ctx object to initialize from.
        */
+      function Random(ctx) {
+        _classCallCheck(this, Random);
 
-    }, {
-      key: "attach",
-      value: function attach(ctx) {
-        return _objectSpread2({}, ctx, {
-          random: this._api()
-        });
-      }
-      /**
-       * Generate a random number.
-       */
-
-    }, {
-      key: "_random",
-      value: function _random() {
-        var R = this.state;
-        var fn;
-
-        if (R.prngstate === undefined) {
-          // No call to a random function has been made.
-          fn = new alea(R.seed, {
-            state: true
-          });
-        } else {
-          fn = new alea('', {
-            state: R.prngstate
-          });
-        }
-
-        var number = fn();
-        this.state = _objectSpread2({}, R, {
-          prngstate: fn.state()
-        });
-        return number;
-      }
-    }, {
-      key: "_api",
-      value: function _api() {
-        var random = this._random.bind(this);
-
-        var SpotValue = {
-          D4: 4,
-          D6: 6,
-          D8: 8,
-          D10: 10,
-          D12: 12,
-          D20: 20
-        }; // Generate functions for predefined dice values D4 - D20.
-
-        var predefined = {};
-
-        var _loop = function _loop(key) {
-          var spotvalue = SpotValue[key];
-
-          predefined[key] = function (diceCount) {
-            if (diceCount === undefined) {
-              return Math.floor(random() * spotvalue) + 1;
-            } else {
-              return _toConsumableArray(new Array(diceCount).keys()).map(function () {
-                return Math.floor(random() * spotvalue) + 1;
-              });
-            }
-          };
+        // If we are on the client, the seed is not present.
+        // Just use a temporary seed to execute the move without
+        // crashing it. The move state itself is discarded,
+        // so the actual value doesn't matter.
+        this.state = ctx._random || {
+          seed: '0',
         };
+      }
+      /**
+       * Updates ctx with the PRNG state.
+       * @param {object} ctx - The ctx object to update.
+       */
 
-        for (var key in SpotValue) {
-          _loop(key);
-        }
+      _createClass(Random, [
+        {
+          key: 'update',
+          value: function update(state) {
+            var ctx = _objectSpread2({}, state.ctx, {
+              _random: this.state,
+            });
 
-        return _objectSpread2({}, predefined, {
+            return _objectSpread2({}, state, {
+              ctx: ctx,
+            });
+          },
           /**
-           * Roll a die of specified spot value.
-           *
-           * @param {number} spotvalue - The die dimension (default: 6).
-           * @param {number} diceCount - number of dice to throw.
-           *                             if not defined, defaults to 1 and returns the value directly.
-           *                             if defined, returns an array containing the random dice values.
+           * Attaches the Random API to ctx.
+           * @param {object} ctx - The ctx object to attach to.
            */
-          Die: function Die(spotvalue, diceCount) {
-            if (spotvalue === undefined) {
-              spotvalue = 6;
-            }
+        },
+        {
+          key: 'attach',
+          value: function attach(ctx) {
+            return _objectSpread2({}, ctx, {
+              random: this._api(),
+            });
+          },
+          /**
+           * Generate a random number.
+           */
+        },
+        {
+          key: '_random',
+          value: function _random() {
+            var R = this.state;
+            var fn;
 
-            if (diceCount === undefined) {
-              return Math.floor(random() * spotvalue) + 1;
+            if (R.prngstate === undefined) {
+              // No call to a random function has been made.
+              fn = new alea(R.seed, {
+                state: true,
+              });
             } else {
-              return _toConsumableArray(new Array(diceCount).keys()).map(function () {
-                return Math.floor(random() * spotvalue) + 1;
+              fn = new alea('', {
+                state: R.prngstate,
               });
             }
+
+            var number = fn();
+            this.state = _objectSpread2({}, R, {
+              prngstate: fn.state(),
+            });
+            return number;
           },
+        },
+        {
+          key: '_api',
+          value: function _api() {
+            var random = this._random.bind(this);
 
-          /**
-           * Generate a random number between 0 and 1.
-           */
-          Number: function Number() {
-            return random();
-          },
+            var SpotValue = {
+              D4: 4,
+              D6: 6,
+              D8: 8,
+              D10: 10,
+              D12: 12,
+              D20: 20,
+            }; // Generate functions for predefined dice values D4 - D20.
 
-          /**
-           * Shuffle an array.
-           *
-           * @param {Array} deck - The array to shuffle. Does not mutate
-           *                       the input, but returns the shuffled array.
-           */
-          Shuffle: function Shuffle(deck) {
-            var clone = deck.slice(0);
-            var srcIndex = deck.length;
-            var dstIndex = 0;
-            var shuffled = new Array(srcIndex);
+            var predefined = {};
 
-            while (srcIndex) {
-              var randIndex = srcIndex * random() | 0;
-              shuffled[dstIndex++] = clone[randIndex];
-              clone[randIndex] = clone[--srcIndex];
+            var _loop = function _loop(key) {
+              var spotvalue = SpotValue[key];
+
+              predefined[key] = function(diceCount) {
+                if (diceCount === undefined) {
+                  return Math.floor(random() * spotvalue) + 1;
+                } else {
+                  return _toConsumableArray(new Array(diceCount).keys()).map(
+                    function() {
+                      return Math.floor(random() * spotvalue) + 1;
+                    }
+                  );
+                }
+              };
+            };
+
+            for (var key in SpotValue) {
+              _loop(key);
             }
 
-            return shuffled;
-          }
-        });
-      }
-    }]);
+            return _objectSpread2({}, predefined, {
+              /**
+               * Roll a die of specified spot value.
+               *
+               * @param {number} spotvalue - The die dimension (default: 6).
+               * @param {number} diceCount - number of dice to throw.
+               *                             if not defined, defaults to 1 and returns the value directly.
+               *                             if defined, returns an array containing the random dice values.
+               */
+              Die: function Die(spotvalue, diceCount) {
+                if (spotvalue === undefined) {
+                  spotvalue = 6;
+                }
 
-    return Random;
-  }();
+                if (diceCount === undefined) {
+                  return Math.floor(random() * spotvalue) + 1;
+                } else {
+                  return _toConsumableArray(new Array(diceCount).keys()).map(
+                    function() {
+                      return Math.floor(random() * spotvalue) + 1;
+                    }
+                  );
+                }
+              },
+
+              /**
+               * Generate a random number between 0 and 1.
+               */
+              Number: function Number() {
+                return random();
+              },
+
+              /**
+               * Shuffle an array.
+               *
+               * @param {Array} deck - The array to shuffle. Does not mutate
+               *                       the input, but returns the shuffled array.
+               */
+              Shuffle: function Shuffle(deck) {
+                var clone = deck.slice(0);
+                var srcIndex = deck.length;
+                var dstIndex = 0;
+                var shuffled = new Array(srcIndex);
+
+                while (srcIndex) {
+                  var randIndex = (srcIndex * random()) | 0;
+                  shuffled[dstIndex++] = clone[randIndex];
+                  clone[randIndex] = clone[--srcIndex];
+                }
+
+                return shuffled;
+              },
+            });
+          },
+        },
+      ]);
+
+      return Random;
+    })();
   /**
    * Removes the attached Random api from ctx.
    *
@@ -1132,10 +1234,9 @@
    * @returns {object} A plain ctx object without the Random API.
    */
 
-  Random.detach = function (ctx) {
+  Random.detach = function(ctx) {
     var random = ctx.random,
-        rest = _objectWithoutProperties(ctx, ["random"]); // eslint-disable-line no-unused-vars
-
+      rest = _objectWithoutProperties(ctx, ['random']); // eslint-disable-line no-unused-vars
 
     return rest;
   };
@@ -1143,8 +1244,7 @@
    * Generates a new seed from the current date / time.
    */
 
-
-  Random.seed = function () {
+  Random.seed = function() {
     return (+new Date()).toString(36).slice(-10);
   };
 
@@ -1153,116 +1253,137 @@
    */
 
   var Events =
-  /*#__PURE__*/
-  function () {
-    function Events(flow, playerID) {
-      _classCallCheck(this, Events);
+    /*#__PURE__*/
+    (function() {
+      function Events(flow, playerID) {
+        _classCallCheck(this, Events);
 
-      this.flow = flow;
-      this.playerID = playerID;
-      this.dispatch = [];
-    }
-    /**
-     * Attaches the Events API to ctx.
-     * @param {object} ctx - The ctx object to attach to.
-     */
-
-
-    _createClass(Events, [{
-      key: "attach",
-      value: function attach(ctx) {
-        var _this = this;
-
-        var events = {};
-        var phase = ctx.phase,
-            turn = ctx.turn;
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
-
-        try {
-          var _loop = function _loop() {
-            var key = _step.value;
-
-            events[key] = function () {
-              for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-                args[_key] = arguments[_key];
-              }
-
-              _this.dispatch.push({
-                key: key,
-                args: args,
-                phase: phase,
-                turn: turn
-              });
-            };
-          };
-
-          for (var _iterator = this.flow.eventNames[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            _loop();
-          }
-        } catch (err) {
-          _didIteratorError = true;
-          _iteratorError = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion && _iterator["return"] != null) {
-              _iterator["return"]();
-            }
-          } finally {
-            if (_didIteratorError) {
-              throw _iteratorError;
-            }
-          }
-        }
-
-        return _objectSpread2({}, ctx, {
-          events: events
-        });
+        this.flow = flow;
+        this.playerID = playerID;
+        this.dispatch = [];
       }
       /**
-       * Updates ctx with the triggered events.
-       * @param {object} state - The state object { G, ctx }.
+       * Attaches the Events API to ctx.
+       * @param {object} ctx - The ctx object to attach to.
        */
 
-    }, {
-      key: "update",
-      value: function update(state) {
-        var length = this.dispatch.length;
+      _createClass(Events, [
+        {
+          key: 'attach',
+          value: function attach(ctx) {
+            var _this = this;
 
-        for (var i = 0; i < length; i++) {
-          var item = this.dispatch[i]; // If the turn already ended some other way,
-          // don't try to end the turn again.
+            var events = {};
+            var phase = ctx.phase,
+              turn = ctx.turn;
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
 
-          if (item.key === 'endTurn' && item.turn !== state.ctx.turn) {
-            continue;
-          } // If the phase already ended some other way,
-          // don't try to end the phase again.
+            try {
+              var _loop = function _loop() {
+                var key = _step.value;
 
+                events[key] = function() {
+                  for (
+                    var _len = arguments.length,
+                      args = new Array(_len),
+                      _key = 0;
+                    _key < _len;
+                    _key++
+                  ) {
+                    args[_key] = arguments[_key];
+                  }
 
-          if ((item.key === 'endPhase' || item.key === 'setPhase') && item.phase !== state.ctx.phase) {
-            continue;
-          }
+                  _this.dispatch.push({
+                    key: key,
+                    args: args,
+                    phase: phase,
+                    turn: turn,
+                  });
+                };
+              };
 
-          var action = automaticGameEvent(item.key, item.args, this.playerID);
-          state = _objectSpread2({}, state, {}, this.flow.processEvent(state, action));
-        }
+              for (
+                var _iterator = this.flow.eventNames[Symbol.iterator](), _step;
+                !(_iteratorNormalCompletion = (_step = _iterator.next()).done);
+                _iteratorNormalCompletion = true
+              ) {
+                _loop();
+              }
+            } catch (err) {
+              _didIteratorError = true;
+              _iteratorError = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion && _iterator['return'] != null) {
+                  _iterator['return']();
+                }
+              } finally {
+                if (_didIteratorError) {
+                  throw _iteratorError;
+                }
+              }
+            }
 
-        return state;
-      }
-    }]);
+            return _objectSpread2({}, ctx, {
+              events: events,
+            });
+          },
+          /**
+           * Updates ctx with the triggered events.
+           * @param {object} state - The state object { G, ctx }.
+           */
+        },
+        {
+          key: 'update',
+          value: function update(state) {
+            var length = this.dispatch.length;
 
-    return Events;
-  }();
+            for (var i = 0; i < length; i++) {
+              var item = this.dispatch[i]; // If the turn already ended some other way,
+              // don't try to end the turn again.
+
+              if (item.key === 'endTurn' && item.turn !== state.ctx.turn) {
+                continue;
+              } // If the phase already ended some other way,
+              // don't try to end the phase again.
+
+              if (
+                (item.key === 'endPhase' || item.key === 'setPhase') &&
+                item.phase !== state.ctx.phase
+              ) {
+                continue;
+              }
+
+              var action = automaticGameEvent(
+                item.key,
+                item.args,
+                this.playerID
+              );
+              state = _objectSpread2(
+                {},
+                state,
+                {},
+                this.flow.processEvent(state, action)
+              );
+            }
+
+            return state;
+          },
+        },
+      ]);
+
+      return Events;
+    })();
   /**
    * Detaches the Events API from ctx.
    * @param {object} ctx - The ctx object to strip.
    */
 
-  Events.detach = function (ctx) {
+  Events.detach = function(ctx) {
     var events = ctx.events,
-        rest = _objectWithoutProperties(ctx, ["events"]); // eslint-disable-line no-unused-vars
-
+      rest = _objectWithoutProperties(ctx, ['events']); // eslint-disable-line no-unused-vars
 
     return rest;
   };
@@ -1272,62 +1393,74 @@
    */
 
   var GameLoggerCtxAPI =
-  /*#__PURE__*/
-  function () {
-    function GameLoggerCtxAPI() {
-      _classCallCheck(this, GameLoggerCtxAPI);
+    /*#__PURE__*/
+    (function() {
+      function GameLoggerCtxAPI() {
+        _classCallCheck(this, GameLoggerCtxAPI);
 
-      this._payload = undefined;
-    }
-
-    _createClass(GameLoggerCtxAPI, [{
-      key: "_api",
-      value: function _api() {
-        var _this = this;
-
-        return {
-          setPayload: function setPayload(payload) {
-            _this._payload = payload;
-          }
-        };
-      }
-    }, {
-      key: "attach",
-      value: function attach(ctx) {
-        return _objectSpread2({}, ctx, {
-          log: this._api()
-        });
-      }
-    }, {
-      key: "update",
-      value: function update(state) {
-        if (this._payload === undefined) {
-          return state;
-        } // attach the payload to the last log event
-
-
-        var deltalog = state.deltalog;
-        deltalog[deltalog.length - 1] = _objectSpread2({}, deltalog[deltalog.length - 1], {
-          payload: this._payload
-        });
         this._payload = undefined;
-        return _objectSpread2({}, state, {
-          deltalog: deltalog
-        });
       }
-    }], [{
-      key: "detach",
-      value: function detach(ctx) {
-        var log = ctx.log,
-            ctxWithoutLog = _objectWithoutProperties(ctx, ["log"]); // eslint-disable-line no-unused-vars
 
+      _createClass(
+        GameLoggerCtxAPI,
+        [
+          {
+            key: '_api',
+            value: function _api() {
+              var _this = this;
 
-        return ctxWithoutLog;
-      }
-    }]);
+              return {
+                setPayload: function setPayload(payload) {
+                  _this._payload = payload;
+                },
+              };
+            },
+          },
+          {
+            key: 'attach',
+            value: function attach(ctx) {
+              return _objectSpread2({}, ctx, {
+                log: this._api(),
+              });
+            },
+          },
+          {
+            key: 'update',
+            value: function update(state) {
+              if (this._payload === undefined) {
+                return state;
+              } // attach the payload to the last log event
 
-    return GameLoggerCtxAPI;
-  }();
+              var deltalog = state.deltalog;
+              deltalog[deltalog.length - 1] = _objectSpread2(
+                {},
+                deltalog[deltalog.length - 1],
+                {
+                  payload: this._payload,
+                }
+              );
+              this._payload = undefined;
+              return _objectSpread2({}, state, {
+                deltalog: deltalog,
+              });
+            },
+          },
+        ],
+        [
+          {
+            key: 'detach',
+            value: function detach(ctx) {
+              var log = ctx.log,
+                ctxWithoutLog = _objectWithoutProperties(ctx, ['log']); // eslint-disable-line no-unused-vars
+
+              return ctxWithoutLog;
+            },
+          },
+        ]
+      );
+
+      return GameLoggerCtxAPI;
+    })();
   /**
    * This class is used to attach/detach various utility objects
    * onto a ctx, without having to manually attach/detach them
@@ -1335,52 +1468,62 @@
    */
 
   var ContextEnhancer =
-  /*#__PURE__*/
-  function () {
-    function ContextEnhancer(ctx, game, player) {
-      _classCallCheck(this, ContextEnhancer);
+    /*#__PURE__*/
+    (function() {
+      function ContextEnhancer(ctx, game, player) {
+        _classCallCheck(this, ContextEnhancer);
 
-      this.random = new Random(ctx);
-      this.events = new Events(game.flow, player);
-      this.log = new GameLoggerCtxAPI();
-    }
+        this.random = new Random(ctx);
+        this.events = new Events(game.flow, player);
+        this.log = new GameLoggerCtxAPI();
+      }
 
-    _createClass(ContextEnhancer, [{
-      key: "attachToContext",
-      value: function attachToContext(ctx) {
-        var ctxWithAPI = this.random.attach(ctx);
-        ctxWithAPI = this.events.attach(ctxWithAPI);
-        ctxWithAPI = this.log.attach(ctxWithAPI);
-        return ctxWithAPI;
-      }
-    }, {
-      key: "_update",
-      value: function _update(state, updateEvents) {
-        var newState = updateEvents ? this.events.update(state) : state;
-        newState = this.random.update(newState);
-        newState = this.log.update(newState);
-        return newState;
-      }
-    }, {
-      key: "updateAndDetach",
-      value: function updateAndDetach(state, updateEvents) {
-        var newState = this._update(state, updateEvents);
+      _createClass(
+        ContextEnhancer,
+        [
+          {
+            key: 'attachToContext',
+            value: function attachToContext(ctx) {
+              var ctxWithAPI = this.random.attach(ctx);
+              ctxWithAPI = this.events.attach(ctxWithAPI);
+              ctxWithAPI = this.log.attach(ctxWithAPI);
+              return ctxWithAPI;
+            },
+          },
+          {
+            key: '_update',
+            value: function _update(state, updateEvents) {
+              var newState = updateEvents ? this.events.update(state) : state;
+              newState = this.random.update(newState);
+              newState = this.log.update(newState);
+              return newState;
+            },
+          },
+          {
+            key: 'updateAndDetach',
+            value: function updateAndDetach(state, updateEvents) {
+              var newState = this._update(state, updateEvents);
 
-        newState.ctx = ContextEnhancer.detachAllFromContext(newState.ctx);
-        return newState;
-      }
-    }], [{
-      key: "detachAllFromContext",
-      value: function detachAllFromContext(ctx) {
-        var ctxWithoutAPI = Random.detach(ctx);
-        ctxWithoutAPI = Events.detach(ctxWithoutAPI);
-        ctxWithoutAPI = GameLoggerCtxAPI.detach(ctxWithoutAPI);
-        return ctxWithoutAPI;
-      }
-    }]);
+              newState.ctx = ContextEnhancer.detachAllFromContext(newState.ctx);
+              return newState;
+            },
+          },
+        ],
+        [
+          {
+            key: 'detachAllFromContext',
+            value: function detachAllFromContext(ctx) {
+              var ctxWithoutAPI = Random.detach(ctx);
+              ctxWithoutAPI = Events.detach(ctxWithoutAPI);
+              ctxWithoutAPI = GameLoggerCtxAPI.detach(ctxWithoutAPI);
+              return ctxWithoutAPI;
+            },
+          },
+        ]
+      );
 
-    return ContextEnhancer;
-  }();
+      return ContextEnhancer;
+    })();
 
   /**
    * Flow
@@ -1458,11 +1601,11 @@
 
   function Flow(_ref) {
     var moves = _ref.moves,
-        phases = _ref.phases,
-        endIf = _ref.endIf,
-        turn = _ref.turn,
-        events = _ref.events,
-        plugins = _ref.plugins;
+      phases = _ref.phases,
+      endIf = _ref.endIf,
+      turn = _ref.turn,
+      events = _ref.events,
+      plugins = _ref.plugins;
 
     // Attach defaults.
     if (moves === undefined) {
@@ -1481,9 +1624,10 @@
       phases = {};
     }
 
-    if (!endIf) endIf = function endIf() {
-      return undefined;
-    };
+    if (!endIf)
+      endIf = function endIf() {
+        return undefined;
+      };
     if (!turn) turn = {};
 
     var phaseMap = _objectSpread2({}, phases);
@@ -1496,7 +1640,7 @@
     var moveMap = {};
     var moveNames = new Set();
     var startingPhase = null;
-    Object.keys(moves).forEach(function (name) {
+    Object.keys(moves).forEach(function(name) {
       return moveNames.add(name);
     });
 
@@ -1508,7 +1652,11 @@
       }
 
       if (conf.moves !== undefined) {
-        for (var _i = 0, _Object$keys = Object.keys(conf.moves); _i < _Object$keys.length; _i++) {
+        for (
+          var _i = 0, _Object$keys = Object.keys(conf.moves);
+          _i < _Object$keys.length;
+          _i++
+        ) {
           var move = _Object$keys[_i];
           moveMap[phase + '.' + move] = conf.moves[move];
           moveNames.add(move);
@@ -1516,13 +1664,13 @@
       }
 
       if (conf.endIf === undefined) {
-        conf.endIf = function () {
+        conf.endIf = function() {
           return undefined;
         };
       }
 
       if (conf.onBegin === undefined) {
-        conf.onBegin = function (G) {
+        conf.onBegin = function(G) {
           return G;
         };
       }
@@ -1530,7 +1678,7 @@
       conf.onBegin = FnWrap(conf.onBegin, plugins);
 
       if (conf.onEnd === undefined) {
-        conf.onEnd = function (G) {
+        conf.onEnd = function(G) {
           return G;
         };
       }
@@ -1546,25 +1694,25 @@
       }
 
       if (conf.turn.onBegin === undefined) {
-        conf.turn.onBegin = function (G) {
+        conf.turn.onBegin = function(G) {
           return G;
         };
       }
 
       if (conf.turn.onEnd === undefined) {
-        conf.turn.onEnd = function (G) {
+        conf.turn.onEnd = function(G) {
           return G;
         };
       }
 
       if (conf.turn.endIf === undefined) {
-        conf.turn.endIf = function () {
+        conf.turn.endIf = function() {
           return false;
         };
       }
 
       if (conf.turn.onMove === undefined) {
-        conf.turn.onMove = function (G) {
+        conf.turn.onMove = function(G) {
           return G;
         };
       }
@@ -1578,7 +1726,11 @@
 
         var _moves = stageConfig.moves || {};
 
-        for (var _i2 = 0, _Object$keys2 = Object.keys(_moves); _i2 < _Object$keys2.length; _i2++) {
+        for (
+          var _i2 = 0, _Object$keys2 = Object.keys(_moves);
+          _i2 < _Object$keys2.length;
+          _i2++
+        ) {
           var _move = _Object$keys2[_i2];
           var key = phase + '.' + stage + '.' + _move;
           moveMap[key] = _moves[_move];
@@ -1605,14 +1757,13 @@
 
       for (var i = 0; i < events.length; i++) {
         var _events$i = events[i],
-            fn = _events$i.fn,
-            arg = _events$i.arg,
-            rest = _objectWithoutProperties(_events$i, ["fn", "arg"]); // Detect a loop of EndPhase calls.
+          fn = _events$i.fn,
+          arg = _events$i.arg,
+          rest = _objectWithoutProperties(_events$i, ['fn', 'arg']); // Detect a loop of EndPhase calls.
         // This could potentially even be an infinite loop
         // if the endIf condition of each phase blindly
         // returns true. The moment we detect a single
         // loop, we just bail out of all phases.
-
 
         if (fn === EndPhase) {
           turnsEnded.clear();
@@ -1620,28 +1771,29 @@
 
           if (phasesEnded.has(_phase)) {
             var ctx = _objectSpread2({}, state.ctx, {
-              phase: null
+              phase: null,
             });
 
             return _objectSpread2({}, state, {
-              ctx: ctx
+              ctx: ctx,
             });
           }
 
           phasesEnded.add(_phase);
         } // Process event.
 
-
         var next = [];
-        state = fn(state, _objectSpread2({}, rest, {
-          arg: arg,
-          next: next
-        }));
+        state = fn(
+          state,
+          _objectSpread2({}, rest, {
+            arg: arg,
+            next: next,
+          })
+        );
 
         if (fn === EndGame) {
           break;
         } // Check if we should end the game.
-
 
         var shouldEndGame = ShouldEndGame(state);
 
@@ -1651,11 +1803,10 @@
             arg: shouldEndGame,
             turn: state.ctx.turn,
             phase: state.ctx.phase,
-            automatic: true
+            automatic: true,
           });
           continue;
         } // Check if we should end the phase.
-
 
         var shouldEndPhase = ShouldEndPhase(state);
 
@@ -1665,11 +1816,10 @@
             arg: shouldEndPhase,
             turn: state.ctx.turn,
             phase: state.ctx.phase,
-            automatic: true
+            automatic: true,
           });
           continue;
         } // Check if we should end the turn.
-
 
         if (fn === OnMove) {
           var shouldEndTurn = ShouldEndTurn(state);
@@ -1680,7 +1830,7 @@
               arg: shouldEndTurn,
               turn: state.ctx.turn,
               phase: state.ctx.phase,
-              automatic: true
+              automatic: true,
             });
             continue;
           }
@@ -1694,11 +1844,10 @@
     // Start //
     ///////////
 
-
     function StartGame(state, _ref2) {
       var next = _ref2.next;
       next.push({
-        fn: StartPhase
+        fn: StartPhase,
       });
       return state;
     }
@@ -1706,7 +1855,7 @@
     function StartPhase(state, _ref3) {
       var next = _ref3.next;
       var G$1 = state.G,
-          ctx$1 = state.ctx;
+        ctx$1 = state.ctx;
       var conf = GetPhase(ctx$1); // Allow plugins to modify G and ctx at the beginning of a phase.
 
       G$1 = G.onPhaseBegin(G$1, ctx$1, plugins);
@@ -1714,27 +1863,31 @@
 
       G$1 = conf.onBegin(G$1, ctx$1);
       next.push({
-        fn: StartTurn
+        fn: StartTurn,
       });
       return _objectSpread2({}, state, {
         G: G$1,
-        ctx: ctx$1
+        ctx: ctx$1,
       });
     }
 
     function StartTurn(state, _ref4) {
       var currentPlayer = _ref4.currentPlayer;
       var G = state.G,
-          ctx = state.ctx;
+        ctx = state.ctx;
       var conf = GetPhase(ctx); // Initialize the turn order state.
 
       if (currentPlayer) {
         ctx = _objectSpread2({}, ctx, {
-          currentPlayer: currentPlayer
+          currentPlayer: currentPlayer,
         });
 
         if (conf.turn.activePlayers) {
-          ctx = SetActivePlayers(ctx, ctx.currentPlayer, conf.turn.activePlayers);
+          ctx = SetActivePlayers(
+            ctx,
+            ctx.currentPlayer,
+            conf.turn.activePlayers
+          );
         }
       } else {
         // This is only called at the beginning of the phase
@@ -1747,38 +1900,39 @@
       ctx = _objectSpread2({}, ctx, {
         turn: turn,
         numMoves: 0,
-        _prevActivePlayers: []
+        _prevActivePlayers: [],
       });
       var plainCtx = ContextEnhancer.detachAllFromContext(ctx);
-      var _undo = [{
-        G: G,
-        ctx: plainCtx
-      }];
+      var _undo = [
+        {
+          G: G,
+          ctx: plainCtx,
+        },
+      ];
       return _objectSpread2({}, state, {
         G: G,
         ctx: ctx,
         _undo: _undo,
-        _redo: []
+        _redo: [],
       });
     } ////////////
     // Update //
     ////////////
 
-
     function UpdatePhase(state, _ref5) {
       var arg = _ref5.arg,
-          next = _ref5.next,
-          phase = _ref5.phase;
+        next = _ref5.next,
+        phase = _ref5.phase;
       var conf = GetPhase({
-        phase: phase
+        phase: phase,
       });
       var _state = state,
-          ctx = _state.ctx;
+        ctx = _state.ctx;
 
       if (arg && arg.next) {
         if (arg.next in phaseMap) {
           ctx = _objectSpread2({}, ctx, {
-            phase: arg.next
+            phase: arg.next,
           });
         } else {
           error('invalid phase: ' + arg.next);
@@ -1786,55 +1940,60 @@
         }
       } else if (conf.next !== undefined) {
         ctx = _objectSpread2({}, ctx, {
-          phase: conf.next
+          phase: conf.next,
         });
       } else {
         ctx = _objectSpread2({}, ctx, {
-          phase: null
+          phase: null,
         });
       }
 
       state = _objectSpread2({}, state, {
-        ctx: ctx
+        ctx: ctx,
       }); // Start the new phase.
 
       next.push({
-        fn: StartPhase
+        fn: StartPhase,
       });
       return state;
     }
 
     function UpdateTurn(state, _ref6) {
       var arg = _ref6.arg,
-          currentPlayer = _ref6.currentPlayer,
-          next = _ref6.next;
+        currentPlayer = _ref6.currentPlayer,
+        next = _ref6.next;
       var _state2 = state,
-          G = _state2.G,
-          ctx = _state2.ctx;
+        G = _state2.G,
+        ctx = _state2.ctx;
       var conf = GetPhase(ctx); // Update turn order state.
 
-      var _UpdateTurnOrderState = UpdateTurnOrderState(G, _objectSpread2({}, ctx, {
-        currentPlayer: currentPlayer
-      }), conf.turn, arg),
-          endPhase = _UpdateTurnOrderState.endPhase,
-          newCtx = _UpdateTurnOrderState.ctx;
+      var _UpdateTurnOrderState = UpdateTurnOrderState(
+          G,
+          _objectSpread2({}, ctx, {
+            currentPlayer: currentPlayer,
+          }),
+          conf.turn,
+          arg
+        ),
+        endPhase = _UpdateTurnOrderState.endPhase,
+        newCtx = _UpdateTurnOrderState.ctx;
 
       ctx = newCtx;
       state = _objectSpread2({}, state, {
         G: G,
-        ctx: ctx
+        ctx: ctx,
       });
 
       if (endPhase) {
         next.push({
           fn: EndPhase,
           turn: ctx.turn,
-          phase: ctx.phase
+          phase: ctx.phase,
         });
       } else {
         next.push({
           fn: StartTurn,
-          currentPlayer: ctx.currentPlayer
+          currentPlayer: ctx.currentPlayer,
         });
       }
 
@@ -1843,19 +2002,19 @@
 
     function UpdateStage(state, _ref7) {
       var arg = _ref7.arg,
-          playerID = _ref7.playerID;
+        playerID = _ref7.playerID;
 
       if (typeof arg === 'string') {
         arg = {
-          stage: arg
+          stage: arg,
         };
       }
 
       var ctx = state.ctx;
       var _ctx = ctx,
-          activePlayers = _ctx.activePlayers,
-          _activePlayersMoveLimit = _ctx._activePlayersMoveLimit,
-          _activePlayersNumMoves = _ctx._activePlayersNumMoves;
+        activePlayers = _ctx.activePlayers,
+        _activePlayersMoveLimit = _ctx._activePlayersMoveLimit,
+        _activePlayersNumMoves = _ctx._activePlayersNumMoves;
 
       if (arg.stage) {
         if (activePlayers === null) {
@@ -1877,32 +2036,31 @@
       ctx = _objectSpread2({}, ctx, {
         activePlayers: activePlayers,
         _activePlayersMoveLimit: _activePlayersMoveLimit,
-        _activePlayersNumMoves: _activePlayersNumMoves
+        _activePlayersNumMoves: _activePlayersNumMoves,
       });
       return _objectSpread2({}, state, {
-        ctx: ctx
+        ctx: ctx,
       });
     } ///////////////
     // ShouldEnd //
     ///////////////
 
-
     function ShouldEndGame(_ref8) {
       var G = _ref8.G,
-          ctx = _ref8.ctx;
+        ctx = _ref8.ctx;
       return endIf(G, ctx);
     }
 
     function ShouldEndPhase(_ref9) {
       var G = _ref9.G,
-          ctx = _ref9.ctx;
+        ctx = _ref9.ctx;
       var conf = GetPhase(ctx);
       return conf.endIf(G, ctx);
     }
 
     function ShouldEndTurn(_ref10) {
       var G = _ref10.G,
-          ctx = _ref10.ctx;
+        ctx = _ref10.ctx;
       var conf = GetPhase(ctx); // End the turn if the required number of moves has been made.
 
       var currentPlayerMoves = ctx.numMoves || 0;
@@ -1916,12 +2074,11 @@
     // End //
     /////////
 
-
     function EndGame(state, _ref11) {
       var arg = _ref11.arg,
-          phase = _ref11.phase;
+        phase = _ref11.phase;
       state = EndPhase(state, {
-        phase: phase
+        phase: phase,
       });
 
       if (arg === undefined) {
@@ -1930,20 +2087,20 @@
 
       return _objectSpread2({}, state, {
         ctx: _objectSpread2({}, state.ctx, {
-          gameover: arg
-        })
+          gameover: arg,
+        }),
       });
     }
 
     function EndPhase(state, _ref12) {
       var arg = _ref12.arg,
-          next = _ref12.next,
-          turn = _ref12.turn,
-          automatic = _ref12.automatic;
+        next = _ref12.next,
+        turn = _ref12.turn,
+        automatic = _ref12.automatic;
       // End the turn first.
       state = EndTurn(state, {
         turn: turn,
-        force: true
+        force: true,
       });
       var G = state.G;
       var ctx = state.ctx;
@@ -1952,21 +2109,19 @@
         next.push({
           fn: UpdatePhase,
           arg: arg,
-          phase: ctx.phase
+          phase: ctx.phase,
         });
       } // If we aren't in a phase, there is nothing else to do.
-
 
       if (ctx.phase === null) {
         return state;
       } // Run any cleanup code for the phase that is about to end.
 
-
       var conf = GetPhase(ctx);
       G = conf.onEnd(G, ctx); // Reset the phase.
 
       ctx = _objectSpread2({}, ctx, {
-        phase: null
+        phase: null,
       }); // Add log entry.
 
       var action = gameEvent('endPhase', arg);
@@ -1974,7 +2129,7 @@
         action: action,
         _stateID: state._stateID,
         turn: state.ctx.turn,
-        phase: state.ctx.phase
+        phase: state.ctx.phase,
       };
 
       if (automatic) {
@@ -1985,16 +2140,16 @@
       return _objectSpread2({}, state, {
         G: G,
         ctx: ctx,
-        deltalog: deltalog
+        deltalog: deltalog,
       });
     }
 
     function EndTurn(state, _ref13) {
       var arg = _ref13.arg,
-          next = _ref13.next,
-          turn = _ref13.turn,
-          force = _ref13.force,
-          automatic = _ref13.automatic;
+        next = _ref13.next,
+        turn = _ref13.turn,
+        force = _ref13.force,
+        automatic = _ref13.automatic;
 
       // This is not the turn that EndTurn was originally
       // called for. The turn was probably ended some other way.
@@ -2003,15 +2158,18 @@
       }
 
       var G = state.G,
-          ctx = state.ctx;
+        ctx = state.ctx;
       var conf = GetPhase(ctx); // Prevent ending the turn if moveLimit haven't been made.
 
       var currentPlayerMoves = ctx.numMoves || 0;
 
-      if (!force && conf.turn.moveLimit && currentPlayerMoves < conf.turn.moveLimit) {
+      if (
+        !force &&
+        conf.turn.moveLimit &&
+        currentPlayerMoves < conf.turn.moveLimit
+      ) {
         return state;
       } // Run turn-end triggers.
-
 
       G = conf.turn.onEnd(G, ctx);
 
@@ -2019,13 +2177,12 @@
         next.push({
           fn: UpdateTurn,
           arg: arg,
-          currentPlayer: ctx.currentPlayer
+          currentPlayer: ctx.currentPlayer,
         });
       } // Reset activePlayers.
 
-
       ctx = _objectSpread2({}, ctx, {
-        activePlayers: null
+        activePlayers: null,
       }); // Add log entry.
 
       var action = gameEvent('endTurn', arg);
@@ -2033,33 +2190,35 @@
         action: action,
         _stateID: state._stateID,
         turn: state.ctx.turn,
-        phase: state.ctx.phase
+        phase: state.ctx.phase,
       };
 
       if (automatic) {
         logEntry.automatic = true;
       }
 
-      var deltalog = [].concat(_toConsumableArray(state.deltalog || []), [logEntry]);
+      var deltalog = [].concat(_toConsumableArray(state.deltalog || []), [
+        logEntry,
+      ]);
       return _objectSpread2({}, state, {
         G: G,
         ctx: ctx,
         deltalog: deltalog,
         _undo: [],
-        _redo: []
+        _redo: [],
       });
     }
 
     function EndStage(state, _ref14) {
       var arg = _ref14.arg,
-          next = _ref14.next,
-          automatic = _ref14.automatic,
-          playerID = _ref14.playerID;
+        next = _ref14.next,
+        automatic = _ref14.automatic,
+        playerID = _ref14.playerID;
       playerID = playerID || state.ctx.currentPlayer;
       var ctx = state.ctx;
       var _ctx2 = ctx,
-          activePlayers = _ctx2.activePlayers,
-          _activePlayersMoveLimit = _ctx2._activePlayersMoveLimit;
+        activePlayers = _ctx2.activePlayers,
+        _activePlayersMoveLimit = _ctx2._activePlayersMoveLimit;
       var playerInStage = activePlayers !== null && playerID in activePlayers;
 
       if (!arg && playerInStage) {
@@ -2073,51 +2232,58 @@
         next.push({
           fn: UpdateStage,
           arg: arg,
-          playerID: playerID
+          playerID: playerID,
         });
       } // If player isn’t in a stage, there is nothing else to do.
 
-
       if (!playerInStage) return state; // Remove player from activePlayers.
 
-      activePlayers = Object.keys(activePlayers).filter(function (id) {
-        return id !== playerID;
-      }).reduce(function (obj, key) {
-        obj[key] = activePlayers[key];
-        return obj;
-      }, {});
+      activePlayers = Object.keys(activePlayers)
+        .filter(function(id) {
+          return id !== playerID;
+        })
+        .reduce(function(obj, key) {
+          obj[key] = activePlayers[key];
+          return obj;
+        }, {});
 
       if (_activePlayersMoveLimit) {
         // Remove player from _activePlayersMoveLimit.
-        _activePlayersMoveLimit = Object.keys(_activePlayersMoveLimit).filter(function (id) {
-          return id !== playerID;
-        }).reduce(function (obj, key) {
-          obj[key] = _activePlayersMoveLimit[key];
-          return obj;
-        }, {});
+        _activePlayersMoveLimit = Object.keys(_activePlayersMoveLimit)
+          .filter(function(id) {
+            return id !== playerID;
+          })
+          .reduce(function(obj, key) {
+            obj[key] = _activePlayersMoveLimit[key];
+            return obj;
+          }, {});
       }
 
-      ctx = UpdateActivePlayersOnceEmpty(_objectSpread2({}, ctx, {
-        activePlayers: activePlayers,
-        _activePlayersMoveLimit: _activePlayersMoveLimit
-      })); // Add log entry.
+      ctx = UpdateActivePlayersOnceEmpty(
+        _objectSpread2({}, ctx, {
+          activePlayers: activePlayers,
+          _activePlayersMoveLimit: _activePlayersMoveLimit,
+        })
+      ); // Add log entry.
 
       var action = gameEvent('endStage', arg);
       var logEntry = {
         action: action,
         _stateID: state._stateID,
         turn: state.ctx.turn,
-        phase: state.ctx.phase
+        phase: state.ctx.phase,
       };
 
       if (automatic) {
         logEntry.automatic = true;
       }
 
-      var deltalog = [].concat(_toConsumableArray(state.deltalog || []), [logEntry]);
+      var deltalog = [].concat(_toConsumableArray(state.deltalog || []), [
+        logEntry,
+      ]);
       return _objectSpread2({}, state, {
         ctx: ctx,
-        deltalog: deltalog
+        deltalog: deltalog,
       });
     }
     /**
@@ -2138,13 +2304,18 @@
      * @param {string} playerID
      */
 
-
     function GetMove(ctx, name, playerID) {
       var conf = GetPhase(ctx);
       var stages = conf.turn.stages;
       var activePlayers = ctx.activePlayers;
 
-      if (activePlayers && activePlayers[playerID] !== undefined && activePlayers[playerID] !== Stage.NULL && stages[activePlayers[playerID]] !== undefined && stages[activePlayers[playerID]].moves !== undefined) {
+      if (
+        activePlayers &&
+        activePlayers[playerID] !== undefined &&
+        activePlayers[playerID] !== Stage.NULL &&
+        stages[activePlayers[playerID]] !== undefined &&
+        stages[activePlayers[playerID]].moves !== undefined
+      ) {
         // Check if moves are defined for the player's stage.
         var _stage2 = stages[activePlayers[playerID]];
         var _moves2 = _stage2.moves;
@@ -2168,7 +2339,7 @@
     function ProcessMove(state, action) {
       var conf = GetPhase(state.ctx);
       var _state3 = state,
-          ctx = _state3.ctx;
+        ctx = _state3.ctx;
       var _activePlayersNumMoves = ctx._activePlayersNumMoves;
       var playerID = action.playerID;
       if (ctx.activePlayers) _activePlayersNumMoves[playerID]++;
@@ -2181,89 +2352,109 @@
       state = _objectSpread2({}, state, {
         ctx: _objectSpread2({}, ctx, {
           numMoves: numMoves,
-          _activePlayersNumMoves: _activePlayersNumMoves
-        })
+          _activePlayersNumMoves: _activePlayersNumMoves,
+        }),
       });
 
-      if (ctx._activePlayersMoveLimit && _activePlayersNumMoves[playerID] >= ctx._activePlayersMoveLimit[playerID]) {
+      if (
+        ctx._activePlayersMoveLimit &&
+        _activePlayersNumMoves[playerID] >=
+          ctx._activePlayersMoveLimit[playerID]
+      ) {
         state = EndStage(state, {
           playerID: playerID,
-          automatic: true
+          automatic: true,
         });
       }
 
       var G = conf.turn.onMove(state.G, state.ctx, action);
       state = _objectSpread2({}, state, {
-        G: G
+        G: G,
       }); // Update undo / redo state.
 
       var undo = state._undo || [];
       var moveType = action.type;
       var plainCtx = ContextEnhancer.detachAllFromContext(state.ctx);
       state = _objectSpread2({}, state, {
-        _undo: [].concat(_toConsumableArray(undo), [{
-          G: state.G,
-          ctx: plainCtx,
-          moveType: moveType
-        }]),
-        _redo: []
+        _undo: [].concat(_toConsumableArray(undo), [
+          {
+            G: state.G,
+            ctx: plainCtx,
+            moveType: moveType,
+          },
+        ]),
+        _redo: [],
       });
-      var events = [{
-        fn: OnMove
-      }];
+      var events = [
+        {
+          fn: OnMove,
+        },
+      ];
       return Process(state, events);
     }
 
     function SetStageEvent(state, playerID, arg) {
-      return Process(state, [{
-        fn: EndStage,
-        arg: arg,
-        playerID: playerID
-      }]);
+      return Process(state, [
+        {
+          fn: EndStage,
+          arg: arg,
+          playerID: playerID,
+        },
+      ]);
     }
 
     function EndStageEvent(state, playerID) {
-      return Process(state, [{
-        fn: EndStage,
-        playerID: playerID
-      }]);
+      return Process(state, [
+        {
+          fn: EndStage,
+          playerID: playerID,
+        },
+      ]);
     }
 
     function SetPhaseEvent(state, _playerID, newPhase) {
-      return Process(state, [{
-        fn: EndPhase,
-        phase: state.ctx.phase,
-        turn: state.ctx.turn,
-        arg: {
-          next: newPhase
-        }
-      }]);
+      return Process(state, [
+        {
+          fn: EndPhase,
+          phase: state.ctx.phase,
+          turn: state.ctx.turn,
+          arg: {
+            next: newPhase,
+          },
+        },
+      ]);
     }
 
     function EndPhaseEvent(state) {
-      return Process(state, [{
-        fn: EndPhase,
-        phase: state.ctx.phase,
-        turn: state.ctx.turn
-      }]);
+      return Process(state, [
+        {
+          fn: EndPhase,
+          phase: state.ctx.phase,
+          turn: state.ctx.turn,
+        },
+      ]);
     }
 
     function EndTurnEvent(state, _playerID, arg) {
-      return Process(state, [{
-        fn: EndTurn,
-        turn: state.ctx.turn,
-        phase: state.ctx.phase,
-        arg: arg
-      }]);
+      return Process(state, [
+        {
+          fn: EndTurn,
+          turn: state.ctx.turn,
+          phase: state.ctx.phase,
+          arg: arg,
+        },
+      ]);
     }
 
     function EndGameEvent(state, _playerID, arg) {
-      return Process(state, [{
-        fn: EndGame,
-        turn: state.ctx.turn,
-        phase: state.ctx.phase,
-        arg: arg
-      }]);
+      return Process(state, [
+        {
+          fn: EndGame,
+          turn: state.ctx.turn,
+          phase: state.ctx.phase,
+          arg: arg,
+        },
+      ]);
     }
 
     var eventHandlers = {
@@ -2273,7 +2464,7 @@
       endPhase: EndPhaseEvent,
       setPhase: SetPhaseEvent,
       endGame: EndGameEvent,
-      setActivePlayers: SetActivePlayersEvent
+      setActivePlayers: SetActivePlayersEvent,
     };
     var enabledEventNames = [];
 
@@ -2307,9 +2498,9 @@
 
     function ProcessEvent(state, action) {
       var _action$payload = action.payload,
-          type = _action$payload.type,
-          playerID = _action$payload.playerID,
-          args = _action$payload.args;
+        type = _action$payload.type,
+        playerID = _action$payload.playerID,
+        args = _action$payload.args;
 
       if (eventHandlers.hasOwnProperty(type)) {
         var eventArgs = [state, playerID].concat(args);
@@ -2333,18 +2524,23 @@
           numPlayers: numPlayers,
           turn: 0,
           currentPlayer: '0',
-          playOrder: _toConsumableArray(new Array(numPlayers)).map(function (_d, i) {
+          playOrder: _toConsumableArray(new Array(numPlayers)).map(function(
+            _d,
+            i
+          ) {
             return i + '';
           }),
           playOrderPos: 0,
           phase: startingPhase,
-          activePlayers: null
+          activePlayers: null,
         };
       },
       init: function init(state) {
-        return Process(state, [{
-          fn: StartGame
-        }]);
+        return Process(state, [
+          {
+            fn: StartGame,
+          },
+        ]);
       },
       isPlayerActive: IsPlayerActive,
       eventHandlers: eventHandlers,
@@ -2354,7 +2550,7 @@
       moveNames: _toConsumableArray(moveNames.values()),
       processMove: ProcessMove,
       processEvent: ProcessEvent,
-      getMove: GetMove
+      getMove: GetMove,
     };
   }
 
@@ -2412,13 +2608,15 @@
     }
 
     if (game.name === undefined) game.name = 'default';
-    if (game.setup === undefined) game.setup = function () {
-      return {};
-    };
+    if (game.setup === undefined)
+      game.setup = function() {
+        return {};
+      };
     if (game.moves === undefined) game.moves = {};
-    if (game.playerView === undefined) game.playerView = function (G) {
-      return G;
-    };
+    if (game.playerView === undefined)
+      game.playerView = function(G) {
+        return G;
+      };
     if (game.plugins === undefined) game.plugins = [];
 
     if (game.name.includes(' ')) {
@@ -2438,7 +2636,7 @@
 
         if (moveFn instanceof Function) {
           var ctxWithPlayerID = _objectSpread2({}, ctx, {
-            playerID: action.playerID
+            playerID: action.playerID,
           });
 
           var args = [G, ctxWithPlayerID].concat(action.args);
@@ -2447,18 +2645,269 @@
         }
 
         return G;
-      }
+      },
     });
   }
 
+  /**
+   * Returns true if a move can be undone.
+   */
+
+  var CanUndoMove = function CanUndoMove(G, ctx, move) {
+    if (move.undoable === false) {
+      return false;
+    }
+
+    if (move.undoable instanceof Function) {
+      return move.undoable(G, ctx);
+    }
+
+    return true;
+  };
   /**
    * Moves can return this when they want to indicate
    * that the combination of arguments is illegal and
    * the move ought to be discarded.
    */
 
-
   var INVALID_MOVE = 'INVALID_MOVE';
+  /**
+   * CreateGameReducer
+   *
+   * Creates the main game state reducer.
+   * @param {...object} game - Return value of Game().
+   * @param {...object} numPlayers - The number of players.
+   * @param {...object} multiplayer - Set to true if we are in a multiplayer client.
+   */
+
+  function CreateGameReducer(_ref) {
+    var game = _ref.game,
+      multiplayer = _ref.multiplayer;
+    game = Game(game);
+    /**
+     * GameReducer
+     *
+     * Redux reducer that maintains the overall game state.
+     * @param {object} state - The state before the action.
+     * @param {object} action - A Redux action.
+     */
+
+    return function() {
+      var state =
+        arguments.length > 0 && arguments[0] !== undefined
+          ? arguments[0]
+          : null;
+      var action = arguments.length > 1 ? arguments[1] : undefined;
+
+      switch (action.type) {
+        case GAME_EVENT: {
+          state = _objectSpread2({}, state, {
+            deltalog: [],
+          }); // Process game events only on the server.
+          // These events like `endTurn` typically
+          // contain code that may rely on secret state
+          // and cannot be computed on the client.
+
+          if (multiplayer) {
+            return state;
+          } // Disallow events once the game is over.
+
+          if (state.ctx.gameover !== undefined) {
+            error('cannot call event after game end');
+            return state;
+          } // Ignore the event if the player isn't active.
+
+          if (
+            action.payload.playerID !== null &&
+            action.payload.playerID !== undefined &&
+            !game.flow.isPlayerActive(
+              state.G,
+              state.ctx,
+              action.payload.playerID
+            )
+          ) {
+            error('disallowed event: '.concat(action.payload.type));
+            return state;
+          }
+
+          var apiCtx = new ContextEnhancer(
+            state.ctx,
+            game,
+            action.payload.playerID
+          );
+          state.ctx = apiCtx.attachToContext(state.ctx);
+          var newState = game.flow.processEvent(state, action);
+          newState = apiCtx.updateAndDetach(newState, true);
+          return _objectSpread2({}, newState, {
+            _stateID: state._stateID + 1,
+          });
+        }
+
+        case MAKE_MOVE: {
+          state = _objectSpread2({}, state, {
+            deltalog: [],
+          }); // Check whether the move is allowed at this time.
+
+          var move = game.flow.getMove(
+            state.ctx,
+            action.payload.type,
+            action.payload.playerID || state.ctx.currentPlayer
+          );
+
+          if (move === null) {
+            error('disallowed move: '.concat(action.payload.type));
+            return state;
+          } // Don't run move on client if optimistic = false.
+
+          if (multiplayer && move.optimistic === false) {
+            return state;
+          } // Disallow moves once the game is over.
+
+          if (state.ctx.gameover !== undefined) {
+            error('cannot make move after game end');
+            return state;
+          } // Ignore the move if the player isn't active.
+
+          if (
+            action.payload.playerID !== null &&
+            action.payload.playerID !== undefined &&
+            !game.flow.isPlayerActive(
+              state.G,
+              state.ctx,
+              action.payload.playerID
+            )
+          ) {
+            error('disallowed move: '.concat(action.payload.type));
+            return state;
+          }
+
+          var _apiCtx = new ContextEnhancer(
+            state.ctx,
+            game,
+            action.payload.playerID
+          );
+
+          var ctxWithAPI = _apiCtx.attachToContext(state.ctx); // Process the move.
+
+          var G = game.processMove(state.G, action.payload, ctxWithAPI); // The game declared the move as invalid.
+
+          if (G === INVALID_MOVE) {
+            return state;
+          } // Create a log entry for this move.
+
+          var logEntry = {
+            action: action,
+            _stateID: state._stateID,
+            turn: state.ctx.turn,
+            phase: state.ctx.phase,
+          };
+
+          if (move.redact === true) {
+            logEntry.redact = true;
+          } // Don't call into events here.
+
+          var _newState = _apiCtx.updateAndDetach(
+            _objectSpread2({}, state, {
+              deltalog: [logEntry],
+            }),
+            false
+          );
+
+          var ctx = _newState.ctx; // Random API code was executed. If we are on the
+          // client, wait for the master response instead.
+
+          if (
+            multiplayer &&
+            ctx._random !== undefined &&
+            ctx._random.prngstate !== undefined
+          ) {
+            return state;
+          }
+
+          state = _objectSpread2({}, _newState, {
+            G: G,
+            ctx: ctx,
+            _stateID: state._stateID + 1,
+          }); // If we're on the client, just process the move
+          // and no triggers in multiplayer mode.
+          // These will be processed on the server, which
+          // will send back a state update.
+
+          if (multiplayer) {
+            return state;
+          } // Allow the flow reducer to process any triggers that happen after moves.
+
+          ctxWithAPI = _apiCtx.attachToContext(state.ctx);
+          state = game.flow.processMove(
+            _objectSpread2({}, state, {
+              ctx: ctxWithAPI,
+            }),
+            action.payload
+          );
+          state = _apiCtx.updateAndDetach(state, true);
+          return state;
+        }
+
+        case RESET:
+        case UPDATE:
+        case SYNC: {
+          return action.state;
+        }
+
+        case UNDO: {
+          var _state = state,
+            _undo = _state._undo,
+            _redo = _state._redo;
+
+          if (_undo.length < 2) {
+            return state;
+          }
+
+          var last = _undo[_undo.length - 1];
+          var restore = _undo[_undo.length - 2]; // Only allow undoable moves to be undone.
+
+          var lastMove = game.flow.getMove(
+            state.ctx,
+            last.moveType,
+            state.ctx.currentPlayer
+          );
+
+          if (!CanUndoMove(state.G, state.ctx, lastMove)) {
+            return state;
+          }
+
+          return _objectSpread2({}, state, {
+            G: restore.G,
+            ctx: restore.ctx,
+            _undo: _undo.slice(0, _undo.length - 1),
+            _redo: [last].concat(_toConsumableArray(_redo)),
+          });
+        }
+
+        case REDO: {
+          var _state2 = state,
+            _undo2 = _state2._undo,
+            _redo2 = _state2._redo;
+
+          if (_redo2.length == 0) {
+            return state;
+          }
+
+          var first = _redo2[0];
+          return _objectSpread2({}, state, {
+            G: first.G,
+            ctx: first.ctx,
+            _undo: [].concat(_toConsumableArray(_undo2), [first]),
+            _redo: _redo2.slice(1),
+          });
+        }
+
+        default: {
+          return state;
+        }
+      }
+    };
+  }
 
   /*
    * Copyright 2018 The boardgame.io Authors
@@ -2491,7 +2940,7 @@
       }
 
       return r;
-    }
+    },
   };
 
   /**
@@ -2506,8 +2955,8 @@
 
   function InitializeGame(_ref) {
     var game = _ref.game,
-        numPlayers = _ref.numPlayers,
-        setupData = _ref.setupData;
+      numPlayers = _ref.numPlayers,
+      setupData = _ref.setupData;
     game = Game(game);
 
     if (!numPlayers) {
@@ -2522,7 +2971,7 @@
     }
 
     ctx$1._random = {
-      seed: seed
+      seed: seed,
     }; // Pass ctx through all the plugins that want to modify it.
 
     ctx$1 = ctx.setup(ctx$1, game); // Augment ctx with the enhancers (TODO: move these into plugins).
@@ -2550,11 +2999,11 @@
       // TODO: This will no longer be necessary once the
       // log stops replaying actions (but reads the actual
       // game states instead).
-      _initial: {}
+      _initial: {},
     };
     var state = game.flow.init({
       G: initial.G,
-      ctx: ctxWithAPI
+      ctx: ctxWithAPI,
     });
     initial.G = state.G;
     initial._undo = state._undo;
@@ -2570,6 +3019,7 @@
   }
 
   exports.ActivePlayers = ActivePlayers;
+  exports.CreateGameReducer = CreateGameReducer;
   exports.INVALID_MOVE = INVALID_MOVE;
   exports.InitializeGame = InitializeGame;
   exports.Pass = Pass;
@@ -2578,5 +3028,4 @@
   exports.TurnOrder = TurnOrder;
 
   Object.defineProperty(exports, '__esModule', { value: true });
-
-}));
+});

@@ -15,9 +15,11 @@ import {
 } from '../src/core/turn-order.js';
 import { PlayerView } from '../src/core/player-view.js';
 import { InitializeGame } from '../src/core/initialize.js';
+import { CreateGameReducer } from '../src/core/reducer.js';
 
 export {
   InitializeGame,
+  CreateGameReducer,
   ActivePlayers,
   Stage,
   TurnOrder,
